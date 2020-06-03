@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import Square from './Square'
 
+let startTime = 0
+let endTime = 0
+
+
 export default class Board extends Component {
     renderSquare = (num) => {
         return <Square id={num} boxClick={this.boxClick} value={this.props.squares[num]} />
@@ -15,6 +19,11 @@ export default class Board extends Component {
             return;
         }
         console.log("Square you got so far is", squaresFromApp)
+
+        if (this.props.squares.every(item => item == null)) {
+            startTime = Date.now()
+            console.log("hey", startTime)
+        }
         const val = this.props.isXNext ? 'X' : 'O';
         squaresFromApp[id] = val;
         console.log("After change", squaresFromApp)
@@ -51,6 +60,12 @@ export default class Board extends Component {
 
         if (winner) {
             status = 'Winner is ' + winner
+            endTime = Date.now()
+
+            let duration = Math.floor((endTime - startTime) / 1000)
+            console.log("duration", duration)
+            this.props.highScore(duration)
+
         } else {
             status = `Next Player : ${this.props.isXNext ? "X" : "O"}`
         }
